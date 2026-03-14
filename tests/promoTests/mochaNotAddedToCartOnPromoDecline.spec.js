@@ -1,13 +1,17 @@
 import { test } from '../_fixtures/fixtures';
+import { 
+  COFFEE_NAMES
+ } 
+ from '../../src/constants';
 
 test('Assert discounted Mocha added to the Cart after promo accepting', async ({
   cartPage,
   menuPage,
 }) => {
   await menuPage.open();
-  await menuPage.clickCappucinoCup();
-  await menuPage.clickEspressoCup();
-  await menuPage.clickAmericanoCup();
+  await menuPage.addCoffeeToCart(COFFEE_NAMES.cappuccino);
+  await menuPage.addCoffeeToCart(COFFEE_NAMES.espresso);
+  await menuPage.addCoffeeToCart(COFFEE_NAMES.americano);
 
   await menuPage.assertPromoMessageIsVisible();
   await menuPage.clickNoPromoButton();
@@ -15,9 +19,9 @@ test('Assert discounted Mocha added to the Cart after promo accepting', async ({
   await menuPage.clickCartLink();
   await cartPage.waitForLoading();
 
-  await cartPage.assertEspressoItemIsVisible();
-  await cartPage.assertDiscountedMochaItemIsHidden();
+  await cartPage.assertCoffeeItemIsVisible(COFFEE_NAMES.espresso);
+  await cartPage.assertCoffeeItemIsHidden('(Discounted) Mocha');
 
-  await cartPage.assertCappuccinoItemIsVisible();
-  await cartPage.assertAmericanoItemIsVisible();
+  await cartPage.assertCoffeeItemIsVisible(COFFEE_NAMES.cappuccino);
+  await cartPage.assertCoffeeItemIsVisible(COFFEE_NAMES.americano);
 });

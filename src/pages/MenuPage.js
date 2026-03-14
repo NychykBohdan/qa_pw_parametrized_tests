@@ -14,24 +14,44 @@ export class MenuPage {
     this.noPromoButton = page.getByRole('button', { name: "Nah, I'll skip." });
   }
 
+  getCoffeeCup(coffeeName) {
+    return this.page.getByLabel(coffeeName, { exact: true });
+  }
+
+  getCoffeeCupCost(coffeeName) {
+    return this.page
+    .getByRole('listitem')
+    .filter({ has: this.getCoffeeCup(coffeeName) });
+  }
+
   async open() {
-    await this.page.goto('/');
+    await test.step(`Open 'Menu page'`, async() => {
+      await this.page.goto('/');
+    })
   }
 
   async clickCartLink() {
-    await this.cartLink.click();
+    await test.step(`Click 'Cart' link`, async() => {
+      await this.cartLink.click();
+    })
   }
 
   async clickYesPromoButton() {
-    await this.yesPromoButton.click();
+    await test.step(`Click 'Yes' in promo window`, async() => {
+      await this.yesPromoButton.click();
+    })
   }
 
   async clickNoPromoButton() {
-    await this.noPromoButton.click();
+    await test.step(`Click 'No' in promo window`, async() => {
+      await this.noPromoButton.click();
+    })
   }
 
   async assertPromoMessageIsVisible() {
-    await expect(this.promoMessage).toBeVisible();
+    await test.step(`Assert 'Promo message' is visible`, async() => {
+      await expect(this.promoMessage).toBeVisible();
+    })
   }
 
   async addCoffeeToCart(coffeeName) {
@@ -46,16 +66,6 @@ export class MenuPage {
       .toContainText(totalPriceFormatStr(coffeePrice));
     })
     
-  }
-
-  getCoffeeCup(coffeeName) {
-    return this.page.getByLabel(coffeeName, { exact: true });
-  }
-
-  getCoffeeCupCost(coffeeName) {
-    return this.page
-    .getByRole('listitem')
-    .filter({ has: this.getCoffeeCup(coffeeName) });
   }
 
   async assertCoffeeCupCost(coffeeName, coffeePrice) {
